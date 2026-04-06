@@ -96,22 +96,12 @@ export default function Dashboard() {
       if (err.response?.status === 429) {
         alert("Server is busy! Many users are generating websites. Please wait 1-2 minutes and try again.");
       } else if (err.response?.data?.error === "No website credits left") {
-        alert("You've used all your credits! Click 'Get Free Credits' to get 3 free website generations.");
+        alert("No credits left. Please purchase more credits from the Billing page.");
       } else {
         alert(err.response?.data?.error || "Generation failed. Please try again.");
       }
     } finally {
       setLoading(false);
-    }
-  };
-
-  const claimFreeCredits = async () => {
-    try {
-      await axios.post(`${API_URL}/api/add-free-credits`, { email });
-      fetchCredits(email);
-      alert("3 free credits added!");
-    } catch (err) {
-      alert("Failed to add credits");
     }
   };
 
@@ -209,21 +199,10 @@ export default function Dashboard() {
               <p className="text-zinc-500 mt-1">Welcome, {email?.split("@")[0]}</p>
             </div>
             <div className="flex items-center gap-4">
-              {credits.websites > 0 ? (
-                <div className="bg-gradient-to-r from-violet-900/50 to-fuchsia-900/50 backdrop-blur-xl border border-white/10 px-5 py-2.5 rounded-full flex items-center gap-3">
-                  <Sparkles className="w-4 h-4 text-violet-400" />
+                <div className="flex items-center gap-3">
                   <span className="text-white font-medium">{credits.websites}</span>
                   <span className="text-zinc-400 text-sm">credits left</span>
                 </div>
-              ) : (
-                <button
-                  onClick={claimFreeCredits}
-                  className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-500 hover:to-emerald-500 px-5 py-2.5 rounded-full font-medium flex items-center gap-2 shadow-lg shadow-green-500/30"
-                >
-                  <Zap className="w-4 h-4" />
-                  Get Free Credits
-                </button>
-              )}
               <button onClick={handleLogout} className="px-4 py-2 text-zinc-400 hover:text-white hover:bg-white/5 rounded-lg transition">
                 Sign Out
               </button>

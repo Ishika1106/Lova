@@ -268,7 +268,7 @@ app.post("/api/create-user", async (req, res) => {
     const { email, name } = req.body;
     const existing = await pool.query("SELECT * FROM users WHERE email = $1", [email]);
     if (existing.rows.length > 0) {
-      return res.json({ message: "User already exists", websites: existing.rows[0].websites });
+      return res.status(409).json({ message: "User already exists", websites: existing.rows[0].websites });
     }
     // New user gets 1 FREE credit
     await pool.query(
