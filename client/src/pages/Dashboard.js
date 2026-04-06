@@ -93,10 +93,12 @@ export default function Dashboard() {
       }
       fetchCredits(email);
     } catch (err) {
-      if (err.response?.data?.error === "No website credits left") {
+      if (err.response?.status === 429) {
+        alert("Server is busy! Many users are generating websites. Please wait 1-2 minutes and try again.");
+      } else if (err.response?.data?.error === "No website credits left") {
         alert("You've used all your credits! Click 'Get Free Credits' to get 3 free website generations.");
       } else {
-        alert(err.response?.data?.error || "Generation failed");
+        alert(err.response?.data?.error || "Generation failed. Please try again.");
       }
     } finally {
       setLoading(false);

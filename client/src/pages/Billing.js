@@ -87,6 +87,12 @@ export default function Billing() {
 
       const order = await res.json();
 
+      if (order.error) {
+        alert(order.details || "Payment service unavailable. Please try again later.");
+        setLoading(null);
+        return;
+      }
+
       const options = {
         key: process.env.REACT_APP_RAZORPAY_KEY_ID || "rzp_test_STBtunhIyRKrO1",
         amount: order.amount,

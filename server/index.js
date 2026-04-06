@@ -178,6 +178,13 @@ app.post("/api/generate", async (req, res) => {
     });
   } catch (err) {
     console.error("Generate error:", err.message, err.stack);
+    
+    if (err.message?.includes("rate_limit") || err.status === 429) {
+      return res.status(429).json({ error: "Server is busy. Please wait 1-2 minutes and try again." });
+    }
+    if (err.message?.includes("Invalid signature")) {
+      return res.status(400).json({ error: "Invalid payment signature" });
+    }
     res.status(500).json({ error: "Generation failed", details: err.message });
   }
 });
@@ -333,6 +340,10 @@ app.post("/api/create-order", async (req, res) => {
     const { amount, email } = req.body;
     console.log("Creating order for amount:", amount, "email:", email);
     
+    if (!amount || amount <= 0) {
+      return res.status(400).json({ error: "Invalid amount" });
+    }
+    
     const order = await razorpay.orders.create({
       amount: amount * 100, // Amount in paise
       currency: "INR",
@@ -343,6 +354,9 @@ app.post("/api/create-order", async (req, res) => {
     res.json(order);
   } catch (err) {
     console.error("Razorpay error:", err);
+    if (err.statusCode === 401) {
+      return res.status(503).json({ error: "Payment service temporarily unavailable. Please try again later." });
+    }
     res.status(500).json({ error: "Failed to create order", details: err.message });
   }
 });
