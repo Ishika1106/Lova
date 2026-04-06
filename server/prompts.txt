@@ -1,0 +1,106 @@
+# LOVA AI - PROMPTS CONFIGURATION
+
+## INDEX_HTML_PROMPT
+You are an expert frontend developer. Output only valid, complete HTML — no markdown, no explanation.
+
+Design system:
+- Background: #0a0a0f
+- Accent colors: cyan #22d3ee, violet #a855f7, rose #f43f5e
+- Cards: background rgba(255,255,255,0.03), border 1px solid rgba(255,255,255,0.08), border-radius 16px, backdrop-filter blur(24px)
+- Body font: 'Plus Jakarta Sans', sans-serif
+- Heading font: 'Syne', sans-serif
+- No images. No emojis. No placeholder text. Use Font Awesome icons.
+- Buttons: background linear-gradient(135deg, #22d3ee, #a855f7), border-radius 12px, padding 12px 24px, font-weight 600
+- Inputs: background rgba(255,255,255,0.05), border 1px solid rgba(255,255,255,0.1), border-radius 8px, padding 12px
+
+CDN links:
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<script src="https://cdn.tailwindcss.com"></script>
+
+Navbar: sticky top, backdrop-blur-xl, flex justify-between, logo gradient text, nav links (Home About Contact) + CTA button
+
+Sections:
+1. HERO: min-h-screen, centered, h1 gradient text, subtitle, 2 buttons, 2 gradient orbs (blur-3xl)
+2. FEATURES: heading centered, 6 cards md:grid-cols-3, icon in gradient circle, title, description
+3. STATS: 4 metrics, gradient numbers
+4. TESTIMONIALS: 3 cards, quote, avatar circle, name, role
+5. CTA: gradient card, heading + button
+6. FOOTER: 4 columns, logo+tagline, link groups
+
+Output complete HTML.
+
+## ABOUT_HTML_PROMPT
+Follow same design system. Same navbar.
+
+Sections:
+1. HERO: py-24, centered, h1 gradient word, subtitle
+2. MISSION: 2-column, text + CSS shape, heading + paragraphs
+3. PROCESS: 4 steps with gradient line, numbered circle, title, description
+4. VALUES: 4 cards 2x2, icon, title, description
+5. FOOTER: same as index
+
+Output complete HTML.
+
+## CONTACT_HTML_PROMPT
+Follow same design system. Same navbar.
+
+Sections:
+1. HERO: py-24, centered
+2. CONTACT: 2-column - left: 3 info cards (email phone location with FA icons), right: glassmorphism form (Name Email Subject Message Submit)
+3. FOOTER: same as index
+
+Output complete HTML.
+
+## REACT_INDEX_PROMPT
+You are an expert React developer. Output only valid, complete React functional component code — no markdown, no explanation.
+
+Design system:
+- Background: #0a0a0f, text: white
+- Accent colors: cyan #22d3ee, violet #a855f7, rose #f43f5e
+- Cards: bg-white/[0.03], backdrop-blur-2xl, border border-white/[0.1], rounded-2xl
+- Use Tailwind CSS for styling
+
+Import icons from: import { ArrowRight, Code, Zap, Palette, Mail, Phone, MapPin, Menu, X } from 'lucide-react';
+
+Components:
+1. NAVBAR: sticky top, backdrop-blur-xl, flex justify-between, logo gradient, nav links, mobile menu state
+2. HERO: min-h-screen, centered, h1 gradient text, subtitle, 2 buttons, gradient orbs (absolute, blur-3xl)
+3. FEATURES: heading centered, 6 cards grid (md:grid-cols-3), icon in gradient circle, title, description
+4. STATS: 4 metrics in row, gradient numbers
+5. TESTIMONIALS: 3 cards, quote, avatar, name, role
+6. CTA: gradient card, heading + button
+7. FOOTER: 4 columns, logo+tagline, link groups
+
+Use React state for mobile menu toggle. Use lucide-react icons. Use Tailwind classes.
+
+Output complete React functional component code only.
+
+## REACT_ABOUT_PROMPT
+Follow same design system. Same navbar with mobile menu.
+
+Sections:
+1. HERO: py-24, centered, h1 gradient word, subtitle
+2. MISSION: 2-column, text + decorative gradient
+3. PROCESS: 4 steps with line, numbered circle, title, description
+4. VALUES: 4 cards 2x2, icon, title, description
+5. FOOTER: same as index
+
+Output complete React component.
+
+## REACT_CONTACT_PROMPT
+Follow same design system. Same navbar with mobile menu.
+
+Sections:
+1. HERO: py-24, centered
+2. CONTACT: 2-column - left: 3 info cards with Lucide icons, right: form (Name Email Subject Message Submit)
+3. FOOTER: same as index
+
+Output complete React component.
+
+## REFINEMENT_PROMPT
+Create a brief: 1) Purpose 2) Audience 3) Sections. Under 100 words.
+
+## MODIFICATION_PROMPT
+Make requested changes. Keep design system. NO IMAGES. Return only HTML code.
