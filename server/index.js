@@ -10,12 +10,9 @@ const { Pool } = require("pg");
 const razorpay = require("./razorpay");
 
 const app = express();
-const corsOrigins = process.env.CORS_ORIGIN 
-  ? JSON.parse(process.env.CORS_ORIGIN) 
-  : ["http://localhost:3000"];
 
 app.use(cors({
-  origin: corsOrigins,
+  origin: true,
   credentials: true
 }));
 app.use(express.json());
