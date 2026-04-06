@@ -45,7 +45,7 @@ export default function Login() {
       }
       
       try {
-        const userRes = await axios.post(`${API_URL}/api/create-user`, {
+        await axios.post(`${API_URL}/api/create-user`, {
           email: userEmail
         });
       } catch (createErr) {}
@@ -73,7 +73,7 @@ export default function Login() {
       }
       
       try {
-        const userRes = await axios.post(`${API_URL}/api/create-user`, {
+        await axios.post(`${API_URL}/api/create-user`, {
           email: userEmail
         });
       } catch (createErr) {}
