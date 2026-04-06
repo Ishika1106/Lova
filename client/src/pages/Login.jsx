@@ -10,6 +10,8 @@ import { useNavigate } from "react-router-dom";
 import { FcGoogle } from "react-icons/fc";
 import { HiOutlineEye, HiOutlineEyeOff } from "react-icons/hi";
 import { ArrowRight, Zap } from "lucide-react";
+import axios from "axios";
+import API_URL from "../api";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -32,10 +34,17 @@ export default function Login() {
 
     try {
       await signInWithEmailAndPassword(auth, email, password);
+      try {
+        await axios.post(`${API_URL}/api/create-user`, {
+          email: email,
+          name: email.split("@")[0]
+        });
+      } catch (createErr) {
+        // Ignore 409 - user already exists
+      }
       navigate("/dashboard");
     } catch (err) {
       setError("Invalid email or password.");
-    } finally {
       setLoading(false);
     }
   };
@@ -45,7 +54,15 @@ export default function Login() {
     setLoading(true);
     const provider = new GoogleAuthProvider();
     try {
-      await signInWithPopup(auth, provider);
+      const result = await signInWithPopup(auth, provider);
+      try {
+        await axios.post(`${API_URL}/api/create-user`, {
+          email: result.user.email,
+          name: result.user.displayName || result.user.email.split("@")[0]
+        });
+      } catch (createErr) {
+        // Ignore 409 - user already exists
+      }
       navigate("/dashboard");
     } catch (err) {
       setError("Google sign-in failed.");

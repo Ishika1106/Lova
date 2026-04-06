@@ -72,6 +72,13 @@ export default function Billing() {
   const handlePayment = async (amount, plan) => {
     setLoading(plan);
     try {
+      const razorpayKey = process.env.REACT_APP_RAZORPAY_KEY_ID;
+      if (!razorpayKey) {
+        alert("Payment configuration missing. Please contact support.");
+        setLoading(null);
+        return;
+      }
+
       const user = auth.currentUser;
       if (!user) {
         alert("Please login first");
@@ -94,7 +101,7 @@ export default function Billing() {
       }
 
       const options = {
-        key: process.env.REACT_APP_RAZORPAY_KEY_ID,
+        key: razorpayKey,
         amount: order.amount,
         currency: "INR",
         order_id: order.id,
