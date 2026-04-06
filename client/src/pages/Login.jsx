@@ -33,14 +33,22 @@ export default function Login() {
     }
 
     try {
-      await signInWithEmailAndPassword(auth, email, password);
-      try {
-        await axios.post(`${API_URL}/api/create-user`, {
-          email: email
-        });
-      } catch (createErr) {
-        // Ignore 409 - user already exists
+      const userCred = await signInWithEmailAndPassword(auth, email, password);
+      const userEmail = userCred.user.email || email;
+      
+      const checkRes = await axios.get(`${API_URL}/api/user/${userEmail}`);
+      if (!checkRes.data || checkRes.data.websites === undefined) {
+        await auth.signOut();
+        setError("Account not found. Please sign up first.");
+        setLoading(false);
+        return;
       }
+      
+      try {
+        const userRes = await axios.post(`${API_URL}/api/create-user`, {
+          email: userEmail
+        });
+      } catch (createErr) {}
       navigate("/dashboard");
     } catch (err) {
       setError("Invalid email or password.");
@@ -54,13 +62,21 @@ export default function Login() {
     const provider = new GoogleAuthProvider();
     try {
       const result = await signInWithPopup(auth, provider);
-      try {
-        await axios.post(`${API_URL}/api/create-user`, {
-          email: result.user.email
-        });
-      } catch (createErr) {
-        // Ignore 409 - user already exists
+      const userEmail = result.user.email;
+      
+      const checkRes = await axios.get(`${API_URL}/api/user/${userEmail}`);
+      if (!checkRes.data || checkRes.data.websites === undefined) {
+        await auth.signOut();
+        setError("Account not found. Please sign up first.");
+        setLoading(false);
+        return;
       }
+      
+      try {
+        const userRes = await axios.post(`${API_URL}/api/create-user`, {
+          email: userEmail
+        });
+      } catch (createErr) {}
       navigate("/dashboard");
     } catch (err) {
       setError("Google sign-in failed.");
