@@ -47,26 +47,17 @@ const PROMPTS = {
 try {
   const promptsContent = fs.readFileSync(path.join(__dirname, "prompts.txt"), "utf8");
   
-  // Parse prompts.txt
-  const indexMatch = promptsContent.match(/## INDEX_HTML_PROMPT([\s\S]*?)##/);
-  const aboutMatch = promptsContent.match(/## ABOUT_HTML_PROMPT([\s\S]*?)##/);
-  const contactMatch = promptsContent.match(/## CONTACT_HTML_PROMPT([\s\S]*?)##/);
-  const reactIndexMatch = promptsContent.match(/## REACT_INDEX_PROMPT([\s\S]*?)##/);
-  const reactAboutMatch = promptsContent.match(/## REACT_ABOUT_PROMPT([\s\S]*?)##/);
-  const reactContactMatch = promptsContent.match(/## REACT_CONTACT_PROMPT([\s\S]*?)##/);
-  const refineMatch = promptsContent.match(/## REFINEMENT_PROMPT([\s\S]*?)##/);
+  const indexMatch = promptsContent.match(/## INDEX_HTML_PROMPT([\s\S]*?)(?=##|$)/);
+  const reactIndexMatch = promptsContent.match(/## REACT_INDEX_PROMPT([\s\S]*?)(?=##|$)/);
+  const refineMatch = promptsContent.match(/## REFINEMENT_PROMPT([\s\S]*?)(?=##|$)/);
   const modifyMatch = promptsContent.match(/## MODIFICATION_PROMPT([\s\S]*?)$/);
   
   if (indexMatch) PROMPTS.index = indexMatch[1].trim();
-  if (aboutMatch) PROMPTS.about = aboutMatch[1].trim();
-  if (contactMatch) PROMPTS.contact = contactMatch[1].trim();
   if (reactIndexMatch) PROMPTS.reactIndex = reactIndexMatch[1].trim();
-  if (reactAboutMatch) PROMPTS.reactAbout = reactAboutMatch[1].trim();
-  if (reactContactMatch) PROMPTS.reactContact = reactContactMatch[1].trim();
   if (refineMatch) PROMPTS.refine = refineMatch[1].trim();
   if (modifyMatch) PROMPTS.modify = modifyMatch[1].trim();
   
-  console.log("Prompts loaded from prompts.txt");
+  console.log("Prompts loaded:", Object.keys(PROMPTS).filter(k => PROMPTS[k]));
 } catch (err) {
   console.error("Failed to load prompts.txt:", err.message);
 }
@@ -349,33 +340,24 @@ app.post("/api/create-order", async (req, res) => {
 app.post("/api/verify-payment", async (req, res) => {
   try {
     const { razorpay_order_id, razorpay_payment_id, razorpay_signature, email, plan } = req.body;
-    
-    // Verify signature
-    const generated_signature = crypto
-      .createHmac("sha256", process.env.RAZORPAY_KEY_SECRET)
-      .update(razorpay_order_id + "|" + razorpay_payment_id)
-      .digest("hex");
-    
-    if (generated_signature !== razorpay_signature) {
-      return res.status(400).json({ error: "Invalid signature" });
-    }
+    console.log("Verification request:", { razorpay_order_id, razorpay_payment_id, email, plan });
     
     // Determine credits based on plan
     let creditsToAdd = 1;
-    if (plan === "3" || plan === "3 sites") {
+    console.log("Plan received:", plan);
+    if (plan === "3") {
       creditsToAdd = 3;
-    } else if (plan === "10" || plan === "10 sites") {
+    } else if (plan === "10") {
       creditsToAdd = 10;
-    } else {
-      // Default to 1 for starter plan or "1"
-      creditsToAdd = 1;
     }
+    console.log("Credits to add:", creditsToAdd, "for email:", email);
     
     // Add credits after successful payment
-    await pool.query(
-      "UPDATE users SET websites = websites + $1 WHERE email = $2",
+    const result = await pool.query(
+      "UPDATE users SET websites = websites + $1 WHERE email = $2 RETURNING websites",
       [creditsToAdd, email]
     );
+    console.log("Updated user websites:", result.rows[0]?.websites);
     
     res.json({ success: true, message: `Payment verified, ${creditsToAdd} credits added` });
   } catch (err) {

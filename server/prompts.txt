@@ -32,28 +32,6 @@ IMPORTANT: Generate ALL sections in a SINGLE HTML file:
 
 Output complete single HTML file with ALL sections.
 
-## ABOUT_HTML_PROMPT
-Follow same design system. Same navbar.
-
-Sections:
-1. HERO: py-24, centered, h1 gradient word, subtitle
-2. MISSION: 2-column, text + CSS shape, heading + paragraphs
-3. PROCESS: 4 steps with gradient line, numbered circle, title, description
-4. VALUES: 4 cards 2x2, icon, title, description
-5. FOOTER: same as index
-
-Output complete HTML.
-
-## CONTACT_HTML_PROMPT
-Follow same design system. Same navbar.
-
-Sections:
-1. HERO: py-24, centered
-2. CONTACT: 2-column - left: 3 info cards (email phone location with FA icons), right: glassmorphism form (Name Email Subject Message Submit)
-3. FOOTER: same as index
-
-Output complete HTML.
-
 ## REACT_INDEX_PROMPT
 You are an expert React developer. Output only valid, complete React functional component code — no markdown, no explanation.
 
@@ -79,28 +57,6 @@ IMPORTANT: Generate ALL sections in ONE App.jsx component:
 Use React state for mobile menu toggle. Use lucide-react icons. Use Tailwind classes.
 
 Output complete single React component with ALL sections.
-
-## REACT_ABOUT_PROMPT
-Follow same design system. Same navbar with mobile menu.
-
-Sections:
-1. HERO: py-24, centered, h1 gradient word, subtitle
-2. MISSION: 2-column, text + decorative gradient
-3. PROCESS: 4 steps with line, numbered circle, title, description
-4. VALUES: 4 cards 2x2, icon, title, description
-5. FOOTER: same as index
-
-Output complete React component.
-
-## REACT_CONTACT_PROMPT
-Follow same design system. Same navbar with mobile menu.
-
-Sections:
-1. HERO: py-24, centered
-2. CONTACT: 2-column - left: 3 info cards with Lucide icons, right: form (Name Email Subject Message Submit)
-3. FOOTER: same as index
-
-Output complete React component.
 
 ## REFINEMENT_PROMPT
 Create a brief: 1) Purpose 2) Audience 3) Sections. Under 100 words.
