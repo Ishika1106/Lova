@@ -19,17 +19,18 @@ CDN links:
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <script src="https://cdn.tailwindcss.com"></script>
 
-Navbar: sticky top, backdrop-blur-xl, flex justify-between, logo gradient text, nav links (Home About Contact) + CTA button
+IMPORTANT: Generate ALL sections in a SINGLE HTML file:
+1. NAVBAR: sticky top, backdrop-blur-xl, flex justify-between, logo gradient text, nav links (Home About Contact) + CTA button
+2. HERO: min-h-screen, centered, h1 gradient text, subtitle, 2 buttons, 2 gradient orbs (blur-3xl)
+3. FEATURES: heading centered, 6 cards md:grid-cols-3, icon in gradient circle, title, description
+4. STATS: 4 metrics, gradient numbers
+5. TESTIMONIALS: 3 cards, quote, avatar circle, name, role
+6. ABOUT: py-24, centered, h1 gradient word, subtitle, 2-column with text + CSS shape, 4 steps with gradient line
+7. CONTACT: 2-column - left: 3 info cards (email phone location with FA icons), right: glassmorphism form
+8. CTA: gradient card, heading + button
+9. FOOTER: 4 columns, logo+tagline, link groups
 
-Sections:
-1. HERO: min-h-screen, centered, h1 gradient text, subtitle, 2 buttons, 2 gradient orbs (blur-3xl)
-2. FEATURES: heading centered, 6 cards md:grid-cols-3, icon in gradient circle, title, description
-3. STATS: 4 metrics, gradient numbers
-4. TESTIMONIALS: 3 cards, quote, avatar circle, name, role
-5. CTA: gradient card, heading + button
-6. FOOTER: 4 columns, logo+tagline, link groups
-
-Output complete HTML.
+Output complete single HTML file with ALL sections.
 
 ## ABOUT_HTML_PROMPT
 Follow same design system. Same navbar.
@@ -62,20 +63,22 @@ Design system:
 - Cards: bg-white/[0.03], backdrop-blur-2xl, border border-white/[0.1], rounded-2xl
 - Use Tailwind CSS for styling
 
-Import icons from: import { ArrowRight, Code, Zap, Palette, Mail, Phone, MapPin, Menu, X } from 'lucide-react';
+Import icons from: import { ArrowRight, Code, Zap, Palette, Mail, Phone, MapPin, Menu, X, Star, Users, TrendingUp, Award } from 'lucide-react';
 
-Components:
+IMPORTANT: Generate ALL sections in ONE App.jsx component:
 1. NAVBAR: sticky top, backdrop-blur-xl, flex justify-between, logo gradient, nav links, mobile menu state
 2. HERO: min-h-screen, centered, h1 gradient text, subtitle, 2 buttons, gradient orbs (absolute, blur-3xl)
 3. FEATURES: heading centered, 6 cards grid (md:grid-cols-3), icon in gradient circle, title, description
 4. STATS: 4 metrics in row, gradient numbers
 5. TESTIMONIALS: 3 cards, quote, avatar, name, role
-6. CTA: gradient card, heading + button
-7. FOOTER: 4 columns, logo+tagline, link groups
+6. ABOUT: py-24, centered, 2-column with text + decorative gradient, 4 steps
+7. CONTACT: 2-column - left: 3 info cards with icons, right: form
+8. CTA: gradient card, heading + button
+9. FOOTER: 4 columns, logo+tagline, link groups
 
 Use React state for mobile menu toggle. Use lucide-react icons. Use Tailwind classes.
 
-Output complete React functional component code only.
+Output complete single React component with ALL sections.
 
 ## REACT_ABOUT_PROMPT
 Follow same design system. Same navbar with mobile menu.

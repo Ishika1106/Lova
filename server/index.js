@@ -10,7 +10,14 @@ const { Pool } = require("pg");
 const razorpay = require("./razorpay");
 
 const app = express();
-app.use(cors());
+const corsOrigins = process.env.CORS_ORIGIN 
+  ? JSON.parse(process.env.CORS_ORIGIN) 
+  : ["http://localhost:3000"];
+
+app.use(cors({
+  origin: corsOrigins,
+  credentials: true
+}));
 app.use(express.json());
 
 const pool = new Pool({
@@ -109,7 +116,7 @@ app.post("/api/generate", async (req, res) => {
     const structuredPrompt = refineRes.choices[0].message.content;
 
     // Generate based on websiteType (html or react)
-    let indexHtml, aboutHtml, contactHtml;
+    let indexHtml, aboutHtml, contactHtml, completions = [];
     
     const generatePage = async (prompt, userContent) => {
       const completion = await groq.chat.completions.create({
@@ -119,38 +126,23 @@ app.post("/api/generate", async (req, res) => {
           { role: "user", content: userContent }
         ],
         temperature: 0.75,
-        max_tokens: 4000,
+        max_tokens: 6000,
       });
+      completions.push(completion);
       return completion.choices[0].message.content;
     };
 
     if (websiteType === "react") {
-      // Generate React components
-      [indexHtml, aboutHtml, contactHtml] = await Promise.all([
-        generatePage(PROMPTS.reactIndex, `Generate index.jsx for: ${structuredPrompt}`),
-        generatePage(PROMPTS.reactAbout, `Generate about.jsx for: ${structuredPrompt}`),
-        generatePage(PROMPTS.reactContact, `Generate contact.jsx for: ${structuredPrompt}`)
-      ]);
+      indexHtml = await generatePage(PROMPTS.reactIndex, `Generate complete App.jsx with ALL sections (Hero, Features, Stats, Testimonials, CTA, Footer, About, Contact) for: ${structuredPrompt}`);
       
-      // Combine React components as JSON
       var aiOutput = JSON.stringify({
-        "App.jsx": indexHtml,
-        "About.jsx": aboutHtml,
-        "Contact.jsx": contactHtml
+        "App.jsx": indexHtml
       });
     } else {
-      // Generate HTML pages
-      [indexHtml, aboutHtml, contactHtml] = await Promise.all([
-        generatePage(PROMPTS.index, `Generate index.html for: ${structuredPrompt}`),
-        generatePage(PROMPTS.about, `Generate about.html for: ${structuredPrompt}`),
-        generatePage(PROMPTS.contact, `Generate contact.html for: ${structuredPrompt}`)
-      ]);
+      indexHtml = await generatePage(PROMPTS.index, `Generate complete index.html with ALL sections (Hero, Features, Stats, Testimonials, CTA, Footer, About, Contact) for: ${structuredPrompt}`);
       
-      // Combine HTML pages as JSON
       var aiOutput = JSON.stringify({
-        "index.html": indexHtml,
-        "about.html": aboutHtml,
-        "contact.html": contactHtml
+        "index.html": indexHtml
       });
     }
 
@@ -168,8 +160,8 @@ app.post("/api/generate", async (req, res) => {
       [userId, projectName, prompt, websiteType, aiOutput]
     );
 
-    const inputTokens = (refineRes.usage?.prompt_tokens || 0) + (completion.usage?.prompt_tokens || 0);
-    const outputTokens = (refineRes.usage?.completion_tokens || 0) + (completion.usage?.completion_tokens || 0);
+    const inputTokens = (refineRes.usage?.prompt_tokens || 0) + completions.reduce((sum, c) => sum + (c.usage?.prompt_tokens || 0), 0);
+    const outputTokens = (refineRes.usage?.completion_tokens || 0) + completions.reduce((sum, c) => sum + (c.usage?.completion_tokens || 0), 0);
     const totalTokens = inputTokens + outputTokens;
     const cost = (inputTokens * (MODEL_PRICING[GROQ_MODEL]?.input || 0) + outputTokens * (MODEL_PRICING[GROQ_MODEL]?.output || 0)) / 1000;
 
