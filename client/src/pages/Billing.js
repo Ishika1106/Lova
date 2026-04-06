@@ -88,7 +88,7 @@ export default function Billing() {
       const order = await res.json();
 
       const options = {
-        key: "rzp_test_STBtunhIyRKrO1",
+        key: process.env.REACT_APP_RAZORPAY_KEY_ID || "rzp_test_STBtunhIyRKrO1",
         amount: order.amount,
         currency: "INR",
         order_id: order.id,

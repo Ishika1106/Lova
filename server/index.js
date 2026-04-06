@@ -77,8 +77,13 @@ app.get("/api/models", async (req, res) => {
 
 app.post("/api/generate", async (req, res) => {
   const { prompt, email, websiteType } = req.body;
+  console.log("Generate request:", { email, websiteType, prompt: prompt?.substring(0, 50) });
 
   try {
+    if (!PROMPTS.refine || !PROMPTS.index) {
+      throw new Error("Prompts not loaded properly");
+    }
+    
     // Check user credits
     const user = await pool.query("SELECT * FROM users WHERE email = $1", [email]);
     if (user.rows.length === 0) {
@@ -90,6 +95,8 @@ app.post("/api/generate", async (req, res) => {
       return res.status(403).json({ error: "No credits left. Please purchase more credits." });
     }
 
+    console.log("User has credits:", userData.websites);
+    
     let refinedPrompt = prompt;
 
     const refineRes = await groq.chat.completions.create({
@@ -102,6 +109,7 @@ app.post("/api/generate", async (req, res) => {
       max_tokens: 150,
     });
     const structuredPrompt = refineRes.choices[0].message.content;
+    console.log("Refined prompt:", structuredPrompt?.substring(0, 100));
 
     // Generate based on websiteType (html or react)
     let indexHtml, aboutHtml, contactHtml, completions = [];
@@ -169,8 +177,8 @@ app.post("/api/generate", async (req, res) => {
       }
     });
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "Generation failed" });
+    console.error("Generate error:", err.message, err.stack);
+    res.status(500).json({ error: "Generation failed", details: err.message });
   }
 });
 
@@ -323,6 +331,7 @@ app.post("/api/add-free-credits", async (req, res) => {
 app.post("/api/create-order", async (req, res) => {
   try {
     const { amount, email } = req.body;
+    console.log("Creating order for amount:", amount, "email:", email);
     
     const order = await razorpay.orders.create({
       amount: amount * 100, // Amount in paise
@@ -330,10 +339,11 @@ app.post("/api/create-order", async (req, res) => {
       receipt: `receipt_${Date.now()}`,
     });
     
+    console.log("Order created:", order.id);
     res.json(order);
   } catch (err) {
     console.error("Razorpay error:", err);
-    res.status(500).json({ error: "Failed to create order" });
+    res.status(500).json({ error: "Failed to create order", details: err.message });
   }
 });
 
