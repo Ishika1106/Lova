@@ -36,8 +36,7 @@ export default function Login() {
       await signInWithEmailAndPassword(auth, email, password);
       try {
         await axios.post(`${API_URL}/api/create-user`, {
-          email: email,
-          name: email.split("@")[0]
+          email: email
         });
       } catch (createErr) {
         // Ignore 409 - user already exists
@@ -57,8 +56,7 @@ export default function Login() {
       const result = await signInWithPopup(auth, provider);
       try {
         await axios.post(`${API_URL}/api/create-user`, {
-          email: result.user.email,
-          name: result.user.displayName || result.user.email.split("@")[0]
+          email: result.user.email
         });
       } catch (createErr) {
         // Ignore 409 - user already exists

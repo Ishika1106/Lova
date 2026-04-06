@@ -38,8 +38,7 @@ export default function Signup() {
     try {
       const userCred = await createUserWithEmailAndPassword(auth, email, password);
       const res = await axios.post(`${API_URL}/api/create-user`, {
-        email: userCred.user.email,
-        name: name || email.split("@")[0]
+        email: userCred.user.email
       });
       if (res.data.message === "User already exists") {
         setError("Account already exists. Please login.");
@@ -70,8 +69,7 @@ export default function Signup() {
     try {
       const result = await signInWithPopup(auth, provider);
       const res = await axios.post(`${API_URL}/api/create-user`, {
-        email: result.user.email,
-        name: result.user.displayName || result.user.email.split("@")[0]
+        email: result.user.email
       });
       if (res.data.message === "User already exists") {
         setError("Account already exists. Please login.");

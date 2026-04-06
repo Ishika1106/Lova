@@ -265,15 +265,15 @@ app.post("/api/voice-to-text", async (req, res) => {
 // User routes
 app.post("/api/create-user", async (req, res) => {
   try {
-    const { email, name } = req.body;
+    const { email } = req.body;
     const existing = await pool.query("SELECT * FROM users WHERE email = $1", [email]);
     if (existing.rows.length > 0) {
       return res.status(409).json({ message: "User already exists", websites: existing.rows[0].websites });
     }
     // New user gets 1 FREE credit
     await pool.query(
-      "INSERT INTO users (email, name, websites, prompts_used) VALUES ($1, $2, 1, 0)",
-      [email, name]
+      "INSERT INTO users (email, websites, prompts_used) VALUES ($1, 1, 0)",
+      [email]
     );
     res.json({ message: "User created", websites: 1 });
   } catch (err) {
