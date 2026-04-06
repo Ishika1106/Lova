@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, Download, Edit, ExternalLink, Smartphone, Monitor, FileCode, FolderOpen, X, Code2 } from "lucide-react";
+import { ArrowLeft, Download, Edit, ExternalLink, Smartphone, Monitor, FileCode, FolderOpen, Code2 } from "lucide-react";
 
 export default function Preview() {
   const navigate = useNavigate();
