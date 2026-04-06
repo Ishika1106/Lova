@@ -51,11 +51,36 @@ export default function Signup() {
       if (err.response?.status === 409 || err.response?.data?.message === "User already exists") {
         setError("Account already exists. Please login.");
         await auth.signOut();
+      } else if (err.code === "auth/email-already-in-use") {
+        setError("Email already exists. Please login instead.");
+      } else if (err.code === "auth/weak-password") {
+        setError("Password should be at least 6 characters.");
+      } else {
+        setError("Signup failed. Please try again.");
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleGoogleSignIn = async () => {
+    setError("");
+    setLoading(true);
+    const provider = new GoogleAuthProvider();
+    try {
+      const result = await signInWithPopup(auth, provider);
+      const res = await axios.post(`${API_URL}/api/create-user`, {
+        email: result.user.email,
+        name: result.user.displayName || result.user.email.split("@")[0]
+      });
+      if (res.data.message === "User already exists") {
+        setError("Account already exists. Please login.");
+        await auth.signOut();
       } else {
         navigate("/dashboard");
       }
     } catch (err) {
-      if (err.response?.data?.message === "User already exists") {
+      if (err.response?.status === 409 || err.response?.data?.message === "User already exists") {
         setError("Account already exists. Please login.");
       } else {
         setError("Google sign-in failed.");
